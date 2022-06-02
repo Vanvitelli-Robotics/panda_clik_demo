@@ -1,0 +1,30 @@
+<launch>
+
+    <arg name="gui" default="true" />
+    <arg name="load_gripper" default="true" />
+    <arg name="robot_description" default="robot_description" />
+    <arg name="rvizconfig" default="$(find panda_clik_demo)/rviz/demo.rviz" />
+
+    <!-- <arg name="rvizconfig" default="$(find your_pkg)/rviz/demo.rviz" /> -->
+    <!-- <arg name="rvizconfig" default="demo.rviz" /> <!- change your config file here (see the line above) -->
+
+    <param name="$(arg robot_description)" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper)" />
+    <param name="$(arg robot_description)_semantic" command="$(find xacro)/xacro '$(find panda_moveit_config)/config/panda_arm_hand.srdf.xacro'" if="$(arg load_gripper)" />
+    <param name="$(arg robot_description)_semantic" command="$(find xacro)/xacro '$(find panda_moveit_config)/config/panda_arm.srdf.xacro'" unless="$(arg load_gripper)" />
+
+    <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+        <rosparam param="/source_list">[cmd/joint_position]</rosparam>
+    </node>
+    <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <rosparam param="/source_list">[cmd/joint_position]</rosparam>
+    </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+
+    <!-- NODI DELLA DEMO (ESCLUSO IL TASK NODE) -->
+    <node name="cartesian_traj_action_server" pkg="panda_clik_demo" type="cartesian_traj_action_server" required="true" output="screen" />
+    <node name="joint_traj_action_server" pkg="panda_clik_demo" type="joint_traj_action_server" required="true" output="screen" />
+    <node name="clik_node" pkg="panda_clik_demo" type="clik_node" required="true" output="screen" />
+
+</launch>

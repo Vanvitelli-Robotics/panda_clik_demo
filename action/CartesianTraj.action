@@ -1,0 +1,16 @@
+# Goal
+
+float64 duration
+geometry_msgs/Pose pi
+geometry_msgs/Pose pf
+
+---
+
+# Result
+
+---
+
+# Feedbk
+
+duration time_left
+
