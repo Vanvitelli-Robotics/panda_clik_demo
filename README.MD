@@ -10,7 +10,7 @@ Demo rete ros con generatori di traiettoria e inversione cinematica (CLIK) per i
 
 Nella cartella src del ros workspace
 ```bash
-gitclone https://github.com/ros-planning/panda_moveit_config.git -b melodic-devel
+git clone https://github.com/ros-planning/panda_moveit_config.git -b noetic-devel
 rosdep install -y --from-paths . --ignore-src --rosdistro noetic
 ```
 
